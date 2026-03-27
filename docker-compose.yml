@@ -1,20 +1,16 @@
-version: '3.8'
 services:
   db:
     image: postgres:15
+    container_name: marketing_db
     restart: always
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=atribucion_db
+      POSTGRES_USER: user_marketing
+      POSTGRES_PASSWORD: password_influencia
+      POSTGRES_DB: marketing_atribucion
     ports:
       - "5432:5432"
-
-  app:
-    build: .
     volumes:
-      - .:/app
-    environment:
-      - DB_URL=postgresql://admin:secret@db:5432/atribucion_db
-    depends_on:
-      - db
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
