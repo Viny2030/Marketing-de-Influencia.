@@ -5,9 +5,10 @@ openpyxl
 # Extracción de Datos (Soberanía tecnológica - Sin APIs oficiales)
 yt-dlp
 
-# Servidor de Visualización (Opcional para el Dashboard)
-fastapi
-uvicorn
-
 # Base de Datos
 psycopg2-binary
+fastapi
+uvicorn
+pydantic
+streamlit
+requests
