@@ -1,16 +1,37 @@
+version: '3.8'
+
 services:
+  # Base de Datos PostgreSQL
   db:
     image: postgres:15
-    container_name: marketing_db
-    restart: always
     environment:
-      POSTGRES_USER: user_marketing
-      POSTGRES_PASSWORD: password_influencia
-      POSTGRES_DB: marketing_atribucion
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: marketing_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  # Backend: FastAPI
+  api:
+    build: .
+    command: uvicorn app:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/marketing_db
+
+  # Frontend: Streamlit
+  dashboard:
+    build: .
+    command: streamlit run dashboard.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
 
 volumes:
   postgres_data:
