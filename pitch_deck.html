@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InfluMetric — Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b0f;
+    --surface: #0f1419;
+    --border: #1e2a35;
+    --accent: #00e5ff;
+    --accent2: #ff3d6b;
+    --accent3: #7cff6b;
+    --accent4: #ffaa00;
+    --text: #e8edf2;
+    --text-dim: #5a7080;
+    --text-mid: #8fa3b0;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--font-body); overflow-x:hidden; }
+
+  /* NAV */
+  .deck-nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(8,11,15,0.95); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.9rem 2.5rem;
+  }
+  .logo { font-family:var(--font-display); font-weight:800; font-size:1.1rem; }
+  .logo span { color:var(--accent); }
+  .slide-counter { font-family:var(--font-mono); font-size:0.7rem; color:var(--text-dim); }
+  .nav-btns { display:flex; gap:0.5rem; }
+  .nav-btn { font-family:var(--font-mono); font-size:0.7rem; padding:0.4rem 1rem; border:1px solid var(--border); background:transparent; color:var(--text-mid); cursor:pointer; letter-spacing:0.05em; text-transform:uppercase; transition:all 0.2s; }
+  .nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .nav-btn.print { border-color:var(--accent); color:var(--accent); }
+  .nav-btn.print:hover { background:var(--accent); color:var(--bg); }
+
+  /* SLIDES */
+  .slides { padding-top:56px; }
+  .slide {
+    min-height:100vh; display:flex; flex-direction:column;
+    justify-content:center; padding:4rem 6rem;
+    border-bottom:1px solid var(--border);
+    position:relative; overflow:hidden;
+    opacity:0; transform:translateY(30px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .slide.visible { opacity:1; transform:translateY(0); }
+
+  /* BG PATTERNS */
+  .slide-grid {
+    position:absolute; inset:0;
+    background-image:linear-gradient(rgba(0,229,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.02) 1px,transparent 1px);
+    background-size:60px 60px;
+    mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);
+    pointer-events:none;
+  }
+  .slide-num {
+    position:absolute; top:2rem; right:2.5rem;
+    font-family:var(--font-display); font-size:5rem; font-weight:800;
+    color:rgba(30,42,53,0.5); line-height:1; pointer-events:none;
+    user-select:none;
+  }
+
+  /* SLIDE TYPES */
+  .slide-cover { background:var(--bg); }
+  .slide-dark { background:var(--surface); }
+  .slide-accent { background:linear-gradient(135deg,#080b0f 0%,#0a1520 100%); }
+
+  /* TYPOGRAPHY */
+  .slide-tag { font-family:var(--font-mono); font-size:0.68rem; color:var(--accent); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.75rem; }
+  .slide-tag::before { content:''; display:inline-block; width:1.5rem; height:1px; background:var(--accent); }
+  .slide-tag.red { color:var(--accent2); }
+  .slide-tag.red::before { background:var(--accent2); }
+  .slide-tag.green { color:var(--accent3); }
+  .slide-tag.green::before { background:var(--accent3); }
+  .slide-tag.yellow { color:var(--accent4); }
+  .slide-tag.yellow::before { background:var(--accent4); }
+
+  h1.cover-title { font-family:var(--font-display); font-weight:800; font-size:clamp(3rem,7vw,6rem); line-height:1; letter-spacing:-0.03em; margin-bottom:1.5rem; }
+  h2.slide-title { font-family:var(--font-display); font-weight:800; font-size:clamp(2rem,4vw,3.2rem); line-height:1.05; letter-spacing:-0.03em; margin-bottom:1rem; }
+  .acc { color:var(--accent); }
+  .acc2 { color:var(--accent2); }
+  .acc3 { color:var(--accent3); }
+  .acc4 { color:var(--accent4); }
+  .sub { font-size:1.1rem; color:var(--text-mid); line-height:1.7; max-width:580px; font-weight:300; margin-bottom:2.5rem; }
+  .sub-sm { font-size:0.95rem; color:var(--text-mid); line-height:1.7; font-weight:300; }
+
+  /* GRIDS */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+  .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; }
+  .grid-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+
+  /* CARDS */
+  .card { background:var(--surface); border:1px solid var(--border); padding:2rem; }
+  .card-sm { background:var(--bg); border:1px solid var(--border); padding:1.5rem; }
+  .card-kpi { background:var(--bg); padding:1.75rem 1.5rem; }
+
+  .card h3 { font-family:var(--font-display); font-weight:700; font-size:1.15rem; margin-bottom:0.75rem; }
+  .card p { font-size:0.88rem; color:var(--text-mid); line-height:1.6; }
+  .card-icon { font-size:1.8rem; margin-bottom:1rem; }
+
+  /* KPI BIG */
+  .kpi-big { font-family:var(--font-display); font-weight:800; font-size:3.5rem; line-height:1; letter-spacing:-0.03em; margin-bottom:0.25rem; }
+  .kpi-label { font-family:var(--font-mono); font-size:0.65rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; }
+
+  /* PROBLEM/SOLUTION */
+  .pain-list { display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem; }
+  .pain-item { display:flex; align-items:flex-start; gap:1rem; padding:1.25rem 1.5rem; background:rgba(255,61,107,0.05); border-left:2px solid var(--accent2); }
+  .pain-icon { font-size:1.2rem; flex-shrink:0; }
+  .pain-text h4 { font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.3rem; }
+  .pain-text p { font-size:0.85rem; color:var(--text-mid); line-height:1.5; }
+
+  .sol-list { display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem; }
+  .sol-item { display:flex; align-items:flex-start; gap:1rem; padding:1.25rem 1.5rem; background:rgba(0,229,255,0.04); border-left:2px solid var(--accent); }
+  .sol-icon { font-size:1.2rem; flex-shrink:0; margin-top:0.1rem; }
+  .sol-text h4 { font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.3rem; }
+  .sol-text p { font-size:0.85rem; color:var(--text-mid); line-height:1.5; }
+
+  /* HOW IT WORKS */
+  .steps { display:flex; gap:0; position:relative; margin-top:2rem; }
+  .step { flex:1; padding:2rem 1.5rem; background:var(--surface); border:1px solid var(--border); border-right:none; position:relative; }
+  .step:last-child { border-right:1px solid var(--border); }
+  .step-n { font-family:var(--font-display); font-weight:800; font-size:3rem; color:var(--border); line-height:1; margin-bottom:1rem; }
+  .step h4 { font-family:var(--font-display); font-weight:700; font-size:1rem; margin-bottom:0.5rem; }
+  .step p { font-size:0.82rem; color:var(--text-mid); line-height:1.6; }
+  .step-arrow { position:absolute; right:-12px; top:50%; transform:translateY(-50%); z-index:2; font-family:var(--font-mono); font-size:0.8rem; color:var(--accent); background:var(--bg); padding:0.2rem; }
+
+  /* MARKET */
+  .market-bar { margin-bottom:1rem; }
+  .market-label { display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.68rem; color:var(--text-mid); margin-bottom:0.4rem; }
+  .market-track { height:6px; background:var(--border); border-radius:3px; }
+  .market-fill { height:100%; border-radius:3px; }
+
+  /* PRICING */
+  .price-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); margin-top:2rem; }
+  .price-cell { background:var(--bg); padding:2rem 1.5rem; }
+  .price-cell.hot { background:rgba(0,229,255,0.04); border-top:2px solid var(--accent); }
+  .price-tier { font-family:var(--font-mono); font-size:0.62rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.75rem; }
+  .price-amount { font-family:var(--font-display); font-weight:800; font-size:2.5rem; letter-spacing:-0.03em; line-height:1; margin-bottom:0.25rem; }
+  .price-per { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-dim); margin-bottom:1.5rem; }
+  .price-features { list-style:none; display:flex; flex-direction:column; gap:0.5rem; }
+  .price-features li { font-size:0.82rem; color:var(--text-mid); display:flex; gap:0.5rem; }
+  .price-features li::before { content:'→'; color:var(--accent); font-family:var(--font-mono); flex-shrink:0; }
+
+  /* TRACTION */
+  .data-row { display:flex; gap:1px; background:var(--border); border:1px solid var(--border); margin-top:2rem; }
+  .data-cell { flex:1; background:var(--bg); padding:1.5rem; text-align:center; }
+  .data-val { font-family:var(--font-display); font-weight:800; font-size:2rem; margin-bottom:0.25rem; }
+  .data-label { font-family:var(--font-mono); font-size:0.6rem; color:var(--text-dim); letter-spacing:0.08em; text-transform:uppercase; }
+
+  /* CTA SLIDE */
+  .cta-box { border:1px solid var(--border); padding:3rem; max-width:600px; margin-top:2rem; }
+  .cta-box input, .cta-box select {
+    width:100%; background:var(--bg); border:1px solid var(--border);
+    color:var(--text); padding:0.75rem 1rem; font-family:var(--font-body);
+    font-size:0.9rem; outline:none; margin-bottom:1rem; transition:border-color 0.2s;
+  }
+  .cta-box input:focus, .cta-box select:focus { border-color:var(--accent); }
+  .cta-box select option { background:var(--surface); }
+  .cta-submit { width:100%; font-family:var(--font-mono); font-size:0.8rem; padding:1rem; background:var(--accent); color:var(--bg); border:none; cursor:pointer; letter-spacing:0.05em; text-transform:uppercase; font-weight:500; transition:filter 0.2s; }
+  .cta-submit:hover { filter:brightness(1.15); }
+
+  /* QUOTE */
+  .quote { border-left:3px solid var(--accent); padding:1.5rem 2rem; margin:1.5rem 0; background:rgba(0,229,255,0.03); }
+  .quote p { font-size:1.1rem; color:var(--text); line-height:1.6; font-style:italic; margin-bottom:0.5rem; }
+  .quote cite { font-family:var(--font-mono); font-size:0.68rem; color:var(--text-dim); }
+
+  /* AUDIENCE TABS */
+  .aud-tabs { display:flex; gap:0; margin-bottom:2rem; }
+  .aud-tab { font-family:var(--font-mono); font-size:0.72rem; padding:0.75rem 1.5rem; background:var(--surface); border:1px solid var(--border); border-right:none; color:var(--text-dim); cursor:pointer; letter-spacing:0.05em; text-transform:uppercase; transition:all 0.2s; }
+  .aud-tab:last-child { border-right:1px solid var(--border); }
+  .aud-tab.active { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+  .aud-panel { display:none; }
+  .aud-panel.active { display:block; }
+
+  /* TEAM */
+  .team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; margin-top:2rem; }
+  .team-card { background:var(--surface); border:1px solid var(--border); padding:1.75rem; }
+  .team-avatar { width:48px; height:48px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:1.2rem; color:var(--bg); margin-bottom:1rem; }
+  .team-name { font-family:var(--font-display); font-weight:700; font-size:1rem; margin-bottom:0.25rem; }
+  .team-role { font-family:var(--font-mono); font-size:0.65rem; color:var(--accent); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.75rem; }
+  .team-bio { font-size:0.82rem; color:var(--text-mid); line-height:1.5; }
+
+  /* DIVIDER */
+  .divider { height:1px; background:var(--border); margin:2rem 0; }
+
+  /* PRINT */
+  @media print {
+    .deck-nav { display:none; }
+    .slide { min-height:auto; page-break-after:always; padding:3rem 4rem; opacity:1 !important; transform:none !important; }
+    body { background:white; color:#111; }
+    :root { --bg:#fff; --surface:#f5f5f5; --border:#ddd; --text:#111; --text-mid:#555; --text-dim:#999; }
+  }
+
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border); }
+</style>
+</head>
+<body>
+
+<nav class="deck-nav">
+  <div class="logo">Influ<span>Metric</span></div>
+  <div class="slide-counter" id="slideCounter">Slide 1 / 12</div>
+  <div class="nav-btns">
+    <button class="nav-btn" onclick="scrollSlide(-1)">← Anterior</button>
+    <button class="nav-btn" onclick="scrollSlide(1)">Siguiente →</button>
+    <button class="nav-btn print" onclick="window.print()">Exportar PDF</button>
+  </div>
+</nav>
+
+<div class="slides" id="slides">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide slide-cover" data-slide="1">
+    <div class="slide-grid"></div>
+    <div class="slide-num">01</div>
+    <div class="slide-tag">Presentacion Comercial — 2025</div>
+    <h1 class="cover-title">El dinero que<br>perdés sin<br><span class="acc">medir</span> tu<br>publicidad</h1>
+    <p class="sub">InfluMetric convierte el gasto en influencers en datos de atribucion reales. Por primera vez, saber exactamente que canal genera ventas.</p>
+    <div style="display:flex;gap:2rem;flex-wrap:wrap">
+      <div>
+        <div class="kpi-label">Mercado global influencer marketing</div>
+        <div class="kpi-big" style="color:var(--accent)">$32B</div>
+      </div>
+      <div>
+        <div class="kpi-label">Sin sistema de medicion real</div>
+        <div class="kpi-big" style="color:var(--accent2)">78%</div>
+      </div>
+      <div>
+        <div class="kpi-label">ROI promedio medido con datos</div>
+        <div class="kpi-big" style="color:var(--accent3)">3.8x</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: PROBLEMA -->
+  <div class="slide slide-dark" data-slide="2">
+    <div class="slide-num">02</div>
+    <div class="slide-tag red">El Problema</div>
+    <h2 class="slide-title">Las marcas invierten<br>a <span class="acc2">ciegas</span></h2>
+    <p class="sub">El 78% de las empresas que usan influencers no pueden medir el ROI real de esa inversion. Pagan y esperan.</p>
+    <div class="pain-list">
+      <div class="pain-item">
+        <div class="pain-icon">◈</div>
+        <div class="pain-text">
+          <h4>Sin trazabilidad entre publicacion y venta</h4>
+          <p>No se sabe si el pico de ventas del lunes fue por el video del viernes o por la campana de Google Ads.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">◉</div>
+        <div class="pain-text">
+          <h4>Metricas de vanidad en lugar de negocio</h4>
+          <p>Las agencias reportan vistas y likes. Los directores de marketing necesitan CPA y ROI.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">◐</div>
+        <div class="pain-text">
+          <h4>Decisiones basadas en intuicion o relaciones</h4>
+          <p>Se renueva el contrato con el influencer que "se siente bien" en lugar del que genera mas ventas reales.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: SOLUCION -->
+  <div class="slide slide-accent" data-slide="3">
+    <div class="slide-num">03</div>
+    <div class="slide-tag">La Solucion</div>
+    <h2 class="slide-title">Atribucion real,<br>sin <span class="acc">APIs</span> de pago</h2>
+    <p class="sub">InfluMetric extrae datos publicos de YouTube, Instagram y TikTok, los cruza con ventanas temporales de venta y genera reportes accionables automaticamente.</p>
+    <div class="sol-list">
+      <div class="sol-item">
+        <div class="sol-icon">→</div>
+        <div class="sol-text">
+          <h4>Scraping soberano 24/7</h4>
+          <p>Monitoreamos miles de videos por hora sin depender de APIs oficiales ni pagar por datos.</p>
+        </div>
+      </div>
+      <div class="sol-item">
+        <div class="sol-icon">→</div>
+        <div class="sol-text">
+          <h4>Modelo de atribucion por ventana temporal</h4>
+          <p>Cruzamos el timestamp del posteo con los picos de venta. Detectamos el impacto real en 1-72 horas post-publicacion.</p>
+        </div>
+      </div>
+      <div class="sol-item">
+        <div class="sol-icon">→</div>
+        <div class="sol-text">
+          <h4>Dashboard por cliente, en tiempo real</h4>
+          <p>Cada cliente ve sus propios datos: ROI por canal, CPA por influencer, ranking de impacto.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: COMO FUNCIONA -->
+  <div class="slide slide-cover" data-slide="4">
+    <div class="slide-num">04</div>
+    <div class="slide-tag">Tecnologia</div>
+    <h2 class="slide-title">Como funciona<br>el <span class="acc">sistema</span></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">01</div>
+        <h4>Descubrimiento</h4>
+        <p>El sistema busca canales e influencers por nicho automaticamente. Sin intervencion manual.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step">
+        <div class="step-n">02</div>
+        <h4>Scraping</h4>
+        <p>Extraemos vistas, likes, fechas y metadata de cada video cada hora usando yt-dlp.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step">
+        <div class="step-n">03</div>
+        <h4>Atribucion</h4>
+        <p>Cruzamos el posteo con los datos de venta del cliente. Modelo last-click configurable.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step">
+        <div class="step-n">04</div>
+        <h4>Reporte</h4>
+        <p>ROI, CPA, ranking de canales. Dashboard interactivo actualizado en tiempo real.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: PARA QUIEN -->
+  <div class="slide slide-dark" data-slide="5">
+    <div class="slide-num">05</div>
+    <div class="slide-tag yellow">Para Quien</div>
+    <h2 class="slide-title">Tres perfiles,<br>un mismo <span class="acc4">problema</span></h2>
+
+    <div class="aud-tabs">
+      <button class="aud-tab active" onclick="setAud('agencias',this)">Agencias</button>
+      <button class="aud-tab" onclick="setAud('marcas',this)">Marcas</button>
+      <button class="aud-tab" onclick="setAud('canales',this)">Canales</button>
+    </div>
+
+    <div class="aud-panel active" id="aud-agencias">
+      <div class="grid-2">
+        <div>
+          <div class="quote">
+            <p>"Nuestros clientes nos preguntan el ROI de cada influencer y no tenemos forma de responder con datos reales."</p>
+            <cite>Director de cuentas, agencia de publicidad</cite>
+          </div>
+          <div class="pain-list" style="margin-top:0">
+            <div class="pain-item"><div class="pain-icon">◈</div><div class="pain-text"><h4>El problema</h4><p>Reportan vistas y engagement pero no pueden justificar la inversion en terminos de negocio.</p></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sol-list" style="margin-top:0">
+            <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Lo que ganan con InfluMetric</h4><p>Reportes automaticos de ROI y CPA por influencer para cada cliente. Se diferencia de otras agencias. Justifica renovaciones de contrato con datos.</p></div></div>
+            <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Como se cobra</h4><p>Plan Pro ($799/mes) por cliente. La agencia lo incluye en sus honorarios o lo cobra como servicio adicional.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="aud-panel" id="aud-marcas">
+      <div class="grid-2">
+        <div>
+          <div class="quote">
+            <p>"Gastamos $5.000 mensuales en influencers y no sabemos cual de los 8 que contratamos realmente vende."</p>
+            <cite>CMO, marca de consumo masivo</cite>
+          </div>
+          <div class="pain-list" style="margin-top:0">
+            <div class="pain-item"><div class="pain-icon">◈</div><div class="pain-text"><h4>El problema</h4><p>Renuevan contratos por intuicion. No saben que canal tiene el CPA mas bajo ni cual tiene el mayor ROI real.</p></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sol-list" style="margin-top:0">
+            <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Lo que ganan con InfluMetric</h4><p>Ranking de sus influencers por ROI real. Deciden con datos quien renovar y quien cortar. Optimizan el presupuesto mes a mes.</p></div></div>
+            <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Como se cobra</h4><p>Plan Pro ($799/mes). Se paga solo si optimizan el 10% de su gasto en influencers.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="aud-panel" id="aud-canales">
+      <div class="grid-2">
+        <div>
+          <div class="quote">
+            <p>"Las marcas me ofrecen $200 por video pero no tengo forma de demostrarles que mi audiencia realmente compra."</p>
+            <cite>Creador de contenido, 80K suscriptores</cite>
+          </div>
+          <div class="pain-list" style="margin-top:0">
+            <div class="pain-item"><div class="pain-icon">◈</div><div class="pain-text"><h4>El problema</h4><p>Negocian tarifas sin datos. Las marcas tienen todo el poder porque el creador no puede demostrar su impacto en ventas.</p></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sol-list" style="margin-top:0">
+            <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Lo que ganan con InfluMetric</h4><p>Media Kit con datos reales de engagement, benchmark vs competencia y tarifa recomendada por nicho. Negocian desde una posicion de fuerza.</p></div></div>
+            <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Como se cobra</h4><p>Plan Creator Pro ($29/mes). Se paga solo con una negociacion mejor por mes.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: MERCADO -->
+  <div class="slide slide-cover" data-slide="6">
+    <div class="slide-num">06</div>
+    <div class="slide-tag">Mercado</div>
+    <h2 class="slide-title">Oportunidad<br>en <span class="acc">Latam</span></h2>
+    <div class="grid-2" style="align-items:start;gap:3rem">
+      <div>
+        <p class="sub" style="margin-bottom:2rem">El mercado de influencer marketing en Latam crece al 28% anual. La herramienta de medicion local practicamente no existe.</p>
+        <div class="market-bar">
+          <div class="market-label"><span>Mercado global</span><span style="color:var(--accent)">$32B</span></div>
+          <div class="market-track"><div class="market-fill" style="width:100%;background:var(--accent)"></div></div>
+        </div>
+        <div class="market-bar">
+          <div class="market-label"><span>Latam (estimado)</span><span style="color:var(--accent2)">$2.8B</span></div>
+          <div class="market-track"><div class="market-fill" style="width:70%;background:var(--accent2)"></div></div>
+        </div>
+        <div class="market-bar">
+          <div class="market-label"><span>Argentina + Mexico + Colombia</span><span style="color:var(--accent4)">$680M</span></div>
+          <div class="market-track"><div class="market-fill" style="width:45%;background:var(--accent4)"></div></div>
+        </div>
+        <div class="market-bar">
+          <div class="market-label"><span>SAM — herramientas de medicion</span><span style="color:var(--accent3)">$48M</span></div>
+          <div class="market-track"><div class="market-fill" style="width:20%;background:var(--accent3)"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="grid-2" style="gap:1px;background:var(--border);border:1px solid var(--border)">
+          <div class="card-kpi"><div class="kpi-label">Crecimiento anual Latam</div><div class="kpi-big" style="color:var(--accent);font-size:2.5rem">28%</div></div>
+          <div class="card-kpi"><div class="kpi-label">Agencias sin herramienta</div><div class="kpi-big" style="color:var(--accent2);font-size:2.5rem">91%</div></div>
+          <div class="card-kpi"><div class="kpi-label">Competidores locales directos</div><div class="kpi-big" style="color:var(--accent3);font-size:2.5rem">0</div></div>
+          <div class="card-kpi"><div class="kpi-label">Precio competidor global</div><div class="kpi-big" style="color:var(--accent4);font-size:2.5rem">$2K+</div></div>
+        </div>
+        <div style="margin-top:1.5rem;padding:1.25rem 1.5rem;background:rgba(0,229,255,0.04);border-left:2px solid var(--accent)">
+          <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.6">Herramientas globales como Traackr o Sprinklr cuestan $2.000-$5.000/mes y no tienen datos granulares de Latam. InfluMetric entra a <strong style="color:var(--text)">1/10 del precio</strong> con foco regional.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: TRACCION -->
+  <div class="slide slide-dark" data-slide="7">
+    <div class="slide-num">07</div>
+    <div class="slide-tag green">Traccion</div>
+    <h2 class="slide-title">El sistema<br>ya <span class="acc3">funciona</span></h2>
+    <p class="sub">Datos reales extraidos en las ultimas 24 horas de operacion del pipeline automatico.</p>
+    <div class="data-row">
+      <div class="data-cell"><div class="data-val" style="color:var(--accent)">49</div><div class="data-label">Videos monitoreados</div></div>
+      <div class="data-cell"><div class="data-val" style="color:var(--accent2)">4</div><div class="data-label">Nichos activos</div></div>
+      <div class="data-cell"><div class="data-val" style="color:var(--accent3)">39</div><div class="data-label">Canales unicos</div></div>
+      <div class="data-cell"><div class="data-val" style="color:var(--accent4)">1h</div><div class="data-label">Ciclo de actualizacion</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="grid-3" style="margin-top:0">
+      <div class="card-sm">
+        <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-dim);margin-bottom:0.5rem;letter-spacing:0.08em;text-transform:uppercase">Stack tecnologico</div>
+        <p class="sub-sm">Python + yt-dlp + pandas + plotly. Sin dependencias de APIs pagas. 100% operativo en local o servidor propio.</p>
+      </div>
+      <div class="card-sm">
+        <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-dim);margin-bottom:0.5rem;letter-spacing:0.08em;text-transform:uppercase">Escalabilidad</div>
+        <p class="sub-sm">El pipeline corre en cualquier servidor con Python. Pasar de 50 a 50.000 videos monitoreados es cuestion de agregar workers.</p>
+      </div>
+      <div class="card-sm">
+        <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-dim);margin-bottom:0.5rem;letter-spacing:0.08em;text-transform:uppercase">Proximo milestone</div>
+        <p class="sub-sm">Integrar datos de venta del cliente via CSV o API para activar el modelo de atribucion completo con cliente real.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: MODELO DE NEGOCIO -->
+  <div class="slide slide-cover" data-slide="8">
+    <div class="slide-num">08</div>
+    <div class="slide-tag">Modelo de Negocio</div>
+    <h2 class="slide-title">Ingresos<br><span class="acc">recurrentes</span></h2>
+    <p class="sub">SaaS mensual con tres segmentos de cliente. Sin costos variables significativos por nuevo cliente.</p>
+    <div class="price-row">
+      <div class="price-cell">
+        <div class="price-tier">Creator</div>
+        <div class="price-amount">$29</div>
+        <div class="price-per">/ mes por creador</div>
+        <ul class="price-features">
+          <li>Media Kit automatico</li>
+          <li>Benchmark del nicho</li>
+          <li>Calculadora de tarifas</li>
+          <li>1 reporte PDF/mes</li>
+        </ul>
+      </div>
+      <div class="price-cell hot">
+        <div class="price-tier">Pro — Agencias y Marcas</div>
+        <div class="price-amount" style="color:var(--accent)">$799</div>
+        <div class="price-per">/ mes por cuenta</div>
+        <ul class="price-features">
+          <li>Hasta 150 influencers</li>
+          <li>Atribucion completa</li>
+          <li>Dashboard interactivo</li>
+          <li>Reportes PDF automaticos</li>
+          <li>5 usuarios / clientes</li>
+          <li>API access</li>
+        </ul>
+      </div>
+      <div class="price-cell">
+        <div class="price-tier">Enterprise</div>
+        <div class="price-amount">Custom</div>
+        <div class="price-per">segun volumen</div>
+        <ul class="price-features">
+          <li>Influencers ilimitados</li>
+          <li>White label</li>
+          <li>Integracion CRM/ERP</li>
+          <li>SLA + soporte dedicado</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:2rem;padding:1.25rem 2rem;background:rgba(0,229,255,0.04);border-left:2px solid var(--accent);display:flex;gap:3rem;flex-wrap:wrap">
+      <div><div class="kpi-label">Break-even</div><div style="font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--accent)">2 clientes Pro</div></div>
+      <div><div class="kpi-label">MRR con 10 clientes Pro</div><div style="font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--accent3)">$7.990</div></div>
+      <div><div class="kpi-label">MRR con 30 clientes Pro</div><div style="font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--accent4)">$23.970</div></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: COMPETENCIA -->
+  <div class="slide slide-dark" data-slide="9">
+    <div class="slide-num">09</div>
+    <div class="slide-tag red">Competencia</div>
+    <h2 class="slide-title">Por que no<br>usan lo que <span class="acc2">existe</span></h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">◈</div>
+        <h3>Traackr / Sprinklr</h3>
+        <p>$2.000-$5.000/mes. Sin datos de Latam. Requieren integracion enterprise. Fuera del alcance de agencias medianas.</p>
+        <div style="margin-top:1rem;font-family:var(--font-mono);font-size:0.65rem;color:var(--accent2)">Precio inasequible para Latam</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">◉</div>
+        <h3>Google Analytics + UTMs</h3>
+        <p>Solo mide trafico web, no contenido organico. El influencer no instala nada. No captura el impacto real del video.</p>
+        <div style="margin-top:1rem;font-family:var(--font-mono);font-size:0.65rem;color:var(--accent2)">No mide contenido organico</div>
+      </div>
+      <div class="card" style="border-color:var(--accent)">
+        <div class="card-icon">★</div>
+        <h3>InfluMetric</h3>
+        <p>$29-$799/mes. Datos reales de Latam. Sin integracion compleja. Operativo en 24 horas. Modelo de atribucion propio.</p>
+        <div style="margin-top:1rem;font-family:var(--font-mono);font-size:0.65rem;color:var(--accent3)">Unica opcion local con atribucion</div>
+      </div>
+    </div>
+    <div style="margin-top:2rem">
+      <div class="quote">
+        <p>"No es que el mercado este satisfecho con las herramientas actuales. Es que directamente no miden porque no pueden pagar lo que existe."</p>
+        <cite>Oportunidad de mercado — segmento SMB Latam</cite>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: ROADMAP -->
+  <div class="slide slide-accent" data-slide="10">
+    <div class="slide-num">10</div>
+    <div class="slide-tag">Roadmap</div>
+    <h2 class="slide-title">Proximos<br><span class="acc">90 dias</span></h2>
+    <div class="grid-2" style="gap:2rem;margin-top:1rem">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem">MES 1 — Validacion</div>
+        <div class="sol-list" style="margin-top:0">
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Primer cliente piloto (gratis o descuento)</h4><p>1 agencia o marca que aporte sus datos de venta reales para activar la atribucion completa.</p></div></div>
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Caso de exito documentado</h4><p>Reporte con datos reales del cliente para usar como prueba social en las proximas ventas.</p></div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem">MES 2-3 — Escala</div>
+        <div class="sol-list" style="margin-top:0">
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>5 clientes pagos</h4><p>Con el caso de exito documentado, salir a vender el plan Pro a agencias y marcas directas.</p></div></div>
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Automatizacion completa del pipeline</h4><p>Deploy en servidor, actualizacion automatica diaria, dashboard por cliente con login propio.</p></div></div>
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Expansion a Instagram y TikTok</h4><p>Incorporar scraping de otras plataformas al mismo pipeline.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: EQUIPO -->
+  <div class="slide slide-dark" data-slide="11">
+    <div class="slide-num">11</div>
+    <div class="slide-tag">Equipo</div>
+    <h2 class="slide-title">Quienes<br>somos</h2>
+    <p class="sub">Buscamos el primer cliente piloto y colaboradores estrategicos para escalar.</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">F</div>
+        <div class="team-name">Founder</div>
+        <div class="team-role">Desarrollo & Producto</div>
+        <div class="team-bio">Pipeline de scraping operativo. Dashboard funcional. Arquitectura del sistema de atribucion disenada y en construccion.</div>
+      </div>
+      <div class="team-card" style="border-style:dashed">
+        <div class="team-avatar" style="background:var(--border);color:var(--text-dim)">?</div>
+        <div class="team-name" style="color:var(--text-dim)">Buscado: Sales</div>
+        <div class="team-role">Desarrollo de negocio</div>
+        <div class="team-bio">Contactos en agencias de publicidad o marcas directas. Comision por cierre o equity segun perfil.</div>
+      </div>
+      <div class="team-card" style="border-style:dashed">
+        <div class="team-avatar" style="background:var(--border);color:var(--text-dim)">?</div>
+        <div class="team-name" style="color:var(--text-dim)">Buscado: Cliente piloto</div>
+        <div class="team-role">Agencia o Marca</div>
+        <div class="team-bio">3 meses gratis a cambio de datos reales de venta y feedback. Caso de exito documentado y publicado.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: CTA -->
+  <div class="slide slide-cover" data-slide="12">
+    <div class="slide-num">12</div>
+    <div class="slide-tag green">Siguiente Paso</div>
+    <h2 class="slide-title">Una reunion<br>de <span class="acc3">30 minutos</span></h2>
+    <p class="sub">Te mostramos el sistema funcionando en vivo con datos reales de tu nicho. Sin compromiso. Sin cargo.</p>
+    <div class="grid-2" style="gap:3rem;align-items:start">
+      <div class="cta-box">
+        <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.5rem">Solicitar demo en vivo</div>
+        <input type="text" placeholder="Nombre y empresa">
+        <input type="email" placeholder="Email de contacto">
+        <select>
+          <option>Soy — Agencia de publicidad</option>
+          <option>Soy — Marca directa</option>
+          <option>Soy — Canal / Influencer</option>
+          <option>Soy — Inversor / Potencial socio</option>
+        </select>
+        <button class="cta-submit" onclick="enviarCTA(this)">Quiero ver el demo</button>
+      </div>
+      <div>
+        <div class="sol-list" style="margin-top:0">
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>En la reunion te mostramos</h4><p>El pipeline corriendo en vivo, el dashboard con datos reales del nicho que te interesa y el modelo de atribucion con datos de ejemplo.</p></div></div>
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Propuesta piloto disponible</h4><p>Para el primer cliente que aporte datos reales de venta: 3 meses sin cargo a cambio de un caso de exito documentado.</p></div></div>
+          <div class="sol-item"><div class="sol-icon">→</div><div class="sol-text"><h4>Contacto directo</h4><p>Sin formularios que nadie lee. Respuesta en menos de 24 horas.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end slides -->
+
+<script>
+  // AUDIENCE TABS
+  function setAud(id, btn) {
+    document.querySelectorAll('.aud-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.aud-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('aud-'+id).classList.add('active');
+  }
+
+  // SCROLL NAVIGATION
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+
+  function scrollSlide(dir) {
+    current = Math.max(0, Math.min(slides.length-1, current+dir));
+    slides[current].scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // COUNTER + VISIBILITY
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.classList.add('visible');
+        const n = e.target.dataset.slide;
+        if(n) {
+          current = parseInt(n)-1;
+          document.getElementById('slideCounter').textContent = `Slide ${n} / ${slides.length}`;
+        }
+      }
+    });
+  }, { threshold:0.3 });
+
+  slides.forEach(s => observer.observe(s));
+
+  // CTA
+  function enviarCTA(btn) {
+    btn.textContent = 'Enviado — te contactamos en menos de 24hs';
+    btn.style.background = 'var(--accent3)';
+  }
+
+  // KEYBOARD NAV
+  document.addEventListener('keydown', e => {
+    if(e.key==='ArrowDown'||e.key==='ArrowRight') scrollSlide(1);
+    if(e.key==='ArrowUp'||e.key==='ArrowLeft') scrollSlide(-1);
+  });
+</script>
+</body>
+</html>
