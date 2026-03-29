@@ -1,4 +1,6 @@
-fecha,monto,producto
-2009-10-24 10:00:00,50.0,Suscripcion
-2009-10-25 14:30:00,150.0,Suscripcion Premium
-2024-01-01 12:00:00,200.0,Curso Online
+fecha,Monto,producto,Canal,ID_Venta
+2024-01-01 12:00:00,200.0,Curso Online,YouTube,1
+2024-01-02 10:00:00,150.0,Suscripcion Premium,Instagram,2
+2024-01-03 14:30:00,50.0,Suscripcion,Google Ads,3
+2024-01-04 09:00:00,300.0,Curso Online,Facebook,4
+2024-01-05 11:00:00,180.0,Suscripcion Premium,YouTube,5
